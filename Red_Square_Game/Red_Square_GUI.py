@@ -53,6 +53,9 @@ class Vue():
         # print(self.offset_x, self.offset_y)
 
     def dragging(self, event):
+        # CALL CARRE COLLISION
+
+
         # width = self.root.winfo_width()
         # height = self.root.winfo_height()
         # differenceX = width - self.modele.largeurPetit / 4
@@ -91,7 +94,13 @@ class Vue():
                                           i.posY+i.taille, fill="red",
                                           outline="white",
                                           tags=("red-square",))
-
+        # for rect in self.modele.carres:
+        #     self.canevasPetit.create_rectangle(rect.posX, rect.posY,
+        #                                        rect.posX + rect.width,
+        #                                        rect.posY + rect.height,
+        #                                        fill=rect.color,
+        #                                        outline="white",
+        #                                        tags=(rect.color + "-rectangle",))
 
 class Modele():
     def __init__(self, parent):
@@ -101,6 +110,7 @@ class Modele():
         self.largeurGrand = 650
         self.hauteurGrand = 650
         self.carres = []
+        # self.rectangles = []
 
     def creer_carre(self):
         x = 205
@@ -108,6 +118,22 @@ class Modele():
         car = Carre(self, x, y)
         self.carres.append(car)
 
+    def creer_rectangle_aleatoire(self):
+        # pour avoir des size varies
+        min_width = 20
+        max_width = 100
+        min_height = 20
+        max_height = 100
+        width = random.randint(min_width, max_width)
+        height = random.randint(min_height, max_height)
+
+        # Pour fitter dans le petit Canevas
+        x = random.randint(0, self.largeurPetit - width)
+        y = random.randint(0, self.hauteurPetit - height)
+
+
+        rect = Rectangle(self, x, y, width, height, "blue")
+        self.carres.append(rect)
 class Carre():
     def __init__(self, parent, x, y):
         self.parent = parent
@@ -119,13 +145,37 @@ class Carre():
         self.angle = None
         self.vitesse =5
 
+class Rectangle(): # BROUILLON
+    def __init__(self, parent, x, y, width, height, color="blue"):
+        self.parent = parent
+        self.posX = x
+        self.posY = y
+        self.width = width
+        self.height = height
+        self.color = color
+
+
+    def trouver_cible(self):
+        self.cibleX = random.randrange(self.parent.largeur)
+        self.cibleY = random.randrange(self.parent.hauteur)
+        self.angle = hp.calcAngle(self.posX, self.posY, self.cibleX, self.cibleY)
+
+    def deplacer(self):
+        if self.cibleX:
+            self.posX, self.posY = hp.getAngledPoint(self.angle, self.vitesse, self.posX, self.posY)
+            dist = hp.calcDistance(self.posX, self.posY, self.cibleX, self.cibleY)
+
+            if dist <= self.vitesse:
+                self.trouver_cible()
+        else:
+            self.trouver_cible()
 
 
 class Controleur():
     def __init__(self):
         self.modele = Modele(self)
         self.vue = Vue(self, self.modele)
-        self.creer_carre()
+        self.creer_carre() # le dit au modele, qui instancie un carre, et la vue laffiche
         self.vue.root.mainloop()
 
     def creer_carre(self):
@@ -136,3 +186,27 @@ class Controleur():
 
 if (__name__ == "__main__"):
     c = Controleur()
+
+# foreach rec in rectangles :
+# def check_collision(carrerouge, rec):
+    #     # Unpack the coordinates
+    #     x1, y1, x2, y2 = carre
+    #     x3, y3, x4, y4 = rec
+    #
+    #     # Check if there is no overlap
+    #     if x2 < x3 or x4 < x1 or y2 < y3 or y4 < y1:
+    #         return False  # No collision
+    #     return True  # Collision detected
+
+
+    # Velocite = prochaine incrementation de x et y
+    # def check_wall_collision(self):
+    #     # Get canvas dimensions from the parent (assuming these are stored in Modele)
+    #     canvas_width = self.parent.largeurPetit
+    #     canvas_height = self.parent.hauteurPetit
+    #
+    #     # Check for collisions with each wall and reverse direction if collided
+    #     if self.posX <= 0 or self.posX + self.width >= canvas_width:
+    #         self.vx = -self.vx  # Reverse X direction
+    #     if self.posY <= 0 or self.posY + self.height >= canvas_height:
+    #         self.vy = -self.vy  # Reverse Y direction
