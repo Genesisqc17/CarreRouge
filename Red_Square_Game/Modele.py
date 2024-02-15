@@ -5,18 +5,18 @@ from helper import Helper as hp
 class Modele():
     def __init__(self, parent):
         self.parent = parent
-        self.largeurPetit = 450
+        self.largeurPetit = 450 # renommer en zone blanc
         self.hauteurPetit = 450
-        self.largeurGrand = 650
+        self.largeurGrand = 650 # renommer en zone jeu
         self.hauteurGrand = 650
-        self.carres = []
+        self.blocs = []
         # self.rectangles = []
 
     def creer_carre(self):
         x = 205
         y = 205
         car = Carre(self, x, y)
-        self.carres.append(car)
+        self.blocs.append(car)
 
     def creer_rectangle_aleatoire(self):
         # pour avoir des size varies
@@ -24,6 +24,7 @@ class Modele():
         max_width = 100
         min_height = 20
         max_height = 100
+
         width = random.randint(min_width, max_width)
         height = random.randint(min_height, max_height)
 
@@ -35,15 +36,15 @@ class Modele():
         vitY = 2 * (random.randint(0,1)) - 1
 
         rect = Rectangle(self, x, y, vitX, vitY, width, height, "blue")
-        self.carres.append(rect)
+        self.blocs.append(rect)
 
     def deplacer_rectangles(self):
-        for r in self.carres:
+        for r in self.blocs:
             if (isinstance(r, Rectangle)):
                 r.deplacer()
 
-    def changer_position(self, new_pos):
-        self.carres[0].changer_position(new_pos)
+    def changer_position(self, new_pos): # pour carre uniquement
+        self.blocs[0].changer_position(new_pos)
 
 
 class Carre():
@@ -67,6 +68,9 @@ class Rectangle(): # BROUILLON
         self.parent = parent
         self.posX = x
         self.posY = y
+        # PosX et Y representent le coin superieur gauche du rectangle
+        # posX_inferieur_droit = posX + self.width
+        # posY_inferieur_droit = posY + self.height
         self.width = width
         self.height = height
         self.color = color
@@ -96,12 +100,12 @@ class Rectangle(): # BROUILLON
 
     def collision_mur(self):
     # Get canvas dimensions from the parent (assuming these are stored in Modele)
-        canvas_width = self.parent.parent.largeurPetit
-        canvas_height = self.parent.parent.hauteurPetit
+        canvas_width = self.parent.largeurGrand # parent = modele
+        canvas_height = self.parent.hauteurGrand # Grand = carre noir
 
     # Check for collisions with each wall and reverse direction if collided
         if self.posX <= 0 or self.posX + self.width >= canvas_width:
-            self.vx = -self.vx  # Reverse X direction
+            self.vitesseX = -self.vitesseX  # Reverse X direction
         if self.posY <= 0 or self.posY + self.height >= canvas_height:
-            self.vy = -self.vy  # Reverse Y direction
+            self.vitesseY = -self.vitesseY  # Reverse Y direction
 

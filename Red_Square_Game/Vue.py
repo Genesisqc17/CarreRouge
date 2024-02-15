@@ -24,6 +24,7 @@ class Vue():
         self.nomGrosCanveas = self.canevasGros.winfo_name()
 
         self.canevasGros.place(x=0, y=0)
+        self.carreBlanc = None
 
         #self.canevasPetit = Canvas(self.root, width=self.modele.largeurPetit,
         #                           height=self.modele.hauteurPetit,
@@ -42,7 +43,7 @@ class Vue():
         self.canevasGros.bind("<ButtonRelease-1>", self.end_drag)
 
 
-        self.canevasGros.create_rectangle((modele.largeurGrand - modele.largeurPetit) / 2,
+        carreBlanc = self.canevasGros.create_rectangle((modele.largeurGrand - modele.largeurPetit) / 2,
                                           (modele.hauteurGrand - modele.hauteurPetit) / 2,
                                           (modele.largeurGrand - modele.largeurPetit) / 2 + modele.largeurPetit,
                                           (modele.hauteurGrand - modele.hauteurPetit) / 2 + modele.hauteurPetit,
@@ -74,7 +75,7 @@ class Vue():
             # print(self.offset_x, self.offset_y)
             self.parent.animer()
 
-    def dragging(self, event):
+    def dragging(self, event): # ne pas calculer le contact avec les murs ici.
         # CALL CARRE COLLISION
 
         # width = self.root.winfo_width()
@@ -87,13 +88,15 @@ class Vue():
         # new_x,y = difference entre la position du curseur et le top-left du red square
         # pour donner la position exacte x,y du carre
         # la coordonnee max que le coin top-left du carre rouge peut etre dans le carre blanc
-        max_x = self.modele.largeurPetit - self.modele.carres[0].taille
-        max_y = self.modele.hauteurPetit - self.modele.carres[0].taille
 
-        new_x = max(0, min(new_x, max_x))  # le maximum entre 0 et la plus petite valeur entre
-        # le nouveau x ou le x maximum (coin haut gauche du red square par rapport au white canvas)
-        new_y = max(0, min(new_y, max_y))
-        print(new_x, new_y)
+
+        # max_x = self.modele.largeurPetit - self.modele.carres[0].taille
+        # max_y = self.modele.hauteurPetit - self.modele.carres[0].taille
+
+        # new_x = max(0, min(new_x, max_x))  # le maximum entre 0 et la plus petite valeur entre
+        # # le nouveau x ou le x maximum (coin haut gauche du red square par rapport au white canvas)
+        # new_y = max(0, min(new_y, max_y))
+        # print(new_x, new_y)
         # set les nouvelles coordonnees du carre rouge
         #self.canevasPetit.coords(self.current_carre, new_x, new_y, new_x + self.modele.carres[0].taille,
         #                         new_y + self.modele.carres[0].taille)
@@ -118,14 +121,14 @@ class Vue():
                                           (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
                                           fill="white")
 
-        for i in self.modele.carres:
+        for i in self.modele.blocs:
             if(isinstance(i, Carre)):
                 self.canevasGros.create_rectangle(i.posX, i.posY,
                                                i.posX + i.taille,
                                                i.posY + i.taille, fill="red",
                                                outline="white",
                                                tags=("red-square",))
-        for rect in self.modele.carres:
+        for rect in self.modele.blocs:
             if(isinstance(rect, Rectangle)):
                 self.canevasGros.create_rectangle(rect.posX, rect.posY,
                                                rect.posX + rect.width,

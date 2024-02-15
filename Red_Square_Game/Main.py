@@ -19,7 +19,7 @@ class Controleur():
         self.vue.afficher_blocs()
 
     def animer(self):
-        self.modele.deplacer_rectangles()
+        self.modele.deplacer_rectangles() # faudra le mettre dans les limites du carre noir
         self.vue.afficher_blocs()
         self.vue.root.after(5, self.animer)
 
