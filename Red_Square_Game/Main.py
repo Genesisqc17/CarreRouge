@@ -5,17 +5,17 @@ class Controleur():
     def __init__(self):
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
-        self.creer_carre()  # le dit au modele, qui instancie un carre, et la vue laffiche
+        self.creer_blocs()  # le dit au modele, qui instancie un carre, et les rectangles et la vue les affiche
         self.vue.root.mainloop()
 
-    def creer_carre(self):
+    def creer_blocs(self):
         self.modele.creer_carre()
         self.modele.creer_rectangle_aleatoire()
         self.vue.afficher_blocs()
         # print(len(self.modele.carres))
 
     def deplacer_rectangles(self):
-        self.modele.deplacer_rectangles()
+        self.modele.deplacer_rectangles() # contient deplacer et collision mur de Rectangle
         self.vue.afficher_blocs()
 
     def animer(self):

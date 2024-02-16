@@ -10,6 +10,7 @@ class Modele():
         self.largeurGrand = 650 # renommer en zone jeu
         self.hauteurGrand = 650
         self.blocs = []
+        self.squareHasBeenClicked = False
         # self.rectangles = []
 
     def creer_carre(self):
@@ -42,6 +43,7 @@ class Modele():
         for r in self.blocs:
             if (isinstance(r, Rectangle)):
                 r.deplacer()
+                r.collision_mur()
 
     def changer_position(self, new_pos): # pour carre uniquement
         self.blocs[0].changer_position(new_pos)
@@ -53,6 +55,7 @@ class Carre():
         self.taille = 40
         self.posX = x
         self.posY = y
+
 
         #self.cibleX= None
         #self.cibleY = None
@@ -98,14 +101,15 @@ class Rectangle(): # BROUILLON
         self.posX += self.vitesseX
         self.posY += self.vitesseY
 
+
     def collision_mur(self):
     # Get canvas dimensions from the parent (assuming these are stored in Modele)
-        canvas_width = self.parent.largeurGrand # parent = modele
+        canvas_width = self.parent.largeurGrand # parent du rectangle = modele
         canvas_height = self.parent.hauteurGrand # Grand = carre noir
 
     # Check for collisions with each wall and reverse direction if collided
         if self.posX <= 0 or self.posX + self.width >= canvas_width:
             self.vitesseX = -self.vitesseX  # Reverse X direction
-        if self.posY <= 0 or self.posY + self.height >= canvas_height:
+        if canvas_height - self.posY <= self.height or self.posY <= 0:
             self.vitesseY = -self.vitesseY  # Reverse Y direction
 
