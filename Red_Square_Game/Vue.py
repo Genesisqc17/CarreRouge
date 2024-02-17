@@ -29,7 +29,8 @@ class Vue():
 
 
         self.canevasGros.tag_bind("red-square", "<Button-1>", self.start_drag)  # bouton gauche sur le carré rouge
-        self.canevasGros.tag_bind("red-square", "<B1-Motion>", self.dragging)  # déplacement du carré rouge
+        # self.canevasGros.tag_bind("red-square", "<B1-Motion>", self.dragging)  # déplacement du carré rouge
+        self.canevasGros.bind("<B1-Motion>", self.dragging)  # déplacement du carré rouge
         self.canevasGros.tag_bind("red-square", "<ButtonRelease-1>",
                                   self.end_drag)  # relâchement du bouton sur le carré rouge
 
@@ -42,19 +43,21 @@ class Vue():
             self.parent.animer()
             self.modele.squareHasBeenClicked = True
         items_with_tag = self.canevasGros.find_withtag("red-square")
+        # print(items_with_tag) # fonctionne
 
         if items_with_tag:
             self.current_carre = items_with_tag[0] # un seul carre
             self.offset_x = event.x - self.canevasGros.coords(self.current_carre)[0]
             # difference entre le click (event) et la bordure du red square
             self.offset_y = event.y - self.canevasGros.coords(self.current_carre)[1]
-            print(self.offset_x, self.offset_y)
+            # print(self.offset_x, self.offset_y)
 
 
 
 
 
     def dragging(self, event):
+        # print("dragging")
         items_with_tag = self.canevasGros.find_withtag("red-square")
 
         if items_with_tag:
@@ -64,7 +67,7 @@ class Vue():
             # new_x2, new_y2 = new_x + self.modele.blocs[0].taille, new_y + self.modele.blocs[0].taille
             for i in self.modele.blocs:
                 if (isinstance(i, Carre)):
-                    i.changer_position((new_x,new_y))
+                    i.changer_position((new_x,new_y)) # mecanique de mouvement dans la classe Carre
             # self.canevasGros.coords(self.current_carre, new_x, new_y, new_x2, new_y2)
 
 

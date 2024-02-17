@@ -57,23 +57,15 @@ class Carre():
         self.posY = y
 
 
-        #self.cibleX= None
-        #self.cibleY = None
-        #self.angle = None
-        #self.vitesse =5
-        # pourquoi est-ce qu'on a besoin de ses params si c'est la souris qui le bouge?
-
     def changer_position(self, new_pos):
         self.posX, self.posY = new_pos
+        # mecanique pour limiter le mouvement du rectangle blanc
 
 class Rectangle(): # BROUILLON
     def __init__(self, parent, x, y, vitX, vitY, width, height, color="blue"):
         self.parent = parent
         self.posX = x
         self.posY = y
-        # PosX et Y representent le coin superieur gauche du rectangle
-        # posX_inferieur_droit = posX + self.width
-        # posY_inferieur_droit = posY + self.height
         self.width = width
         self.height = height
         self.color = color
@@ -82,24 +74,10 @@ class Rectangle(): # BROUILLON
         self.vitesseY = vitY
 
 
-    # def trouver_cible(self):
-    #     self.cibleX = random.randrange(self.parent.largeur)
-    #     self.cibleY = random.randrange(self.parent.hauteur)
-    #     self.angle = hp.calcAngle(self.posX, self.posY, self.cibleX, self.cibleY)
-
-    # def deplacer(self):
-    #     if self.cibleX:
-    #         self.posX, self.posY = hp.getAngledPoint(self.angle, self.vitesse, self.posX, self.posY)
-    #         dist = hp.calcDistance(self.posX, self.posY, self.cibleX, self.cibleY)
-    #
-    #         if dist <= self.vitesse:
-    #             self.trouver_cible()
-    #     else:
-    #         self.trouver_cible()
-
     def deplacer(self):
         self.posX += self.vitesseX
         self.posY += self.vitesseY
+
 
 
     def collision_mur(self):
