@@ -10,12 +10,15 @@ class Controleur():
 
     def creer_blocs(self):
         self.modele.creer_carre()
-        self.modele.creer_rectangle_aleatoire()
+        for i in range(self.modele.nbRect):
+            self.modele.creer_rectangle_aleatoire()
+
         self.vue.afficher_blocs()
         # print(len(self.modele.carres))
 
     def deplacer_rectangles(self):
         self.modele.deplacer_rectangles() # contient deplacer et collision mur de Rectangle
+
         self.vue.afficher_blocs()
 
     def animer(self):

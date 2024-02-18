@@ -26,6 +26,7 @@ class Vue():
         self.canevasGros.place(x=0, y=0)
         self.carreBlanc = None
         self.carreRouge = None
+        self.rectBlanc = None
 
 
         self.canevasGros.tag_bind("red-square", "<Button-1>", self.start_drag)  # bouton gauche sur le carré rouge
@@ -81,7 +82,7 @@ class Vue():
     def afficher_blocs(self):
         self.canevasGros.delete("all")
 
-        self.canevasGros.create_rectangle((self.modele.largeurGrand - self.modele.largeurPetit) / 2,
+        self.rectBlanc = self.canevasGros.create_rectangle((self.modele.largeurGrand - self.modele.largeurPetit) / 2,
                                           (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2,
                                           (self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
                                           (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
