@@ -1,7 +1,7 @@
 from tkinter import *
-
+from tkinter import ttk
 from Modele import Carre, Rectangle
-
+import sv_ttk
 
 class Vue():
     def __init__(self, parent, modele):
@@ -15,27 +15,106 @@ class Vue():
         self.offset_y = 0
         self.current_carre = None
 
-        self.root.geometry("850x650")
-        self.root.configure(background="black")
+        self.root.geometry("650x650")
+        self.root.title("Red Square")
+        #self.root.configure(background="black")
 
-        self.canevasGros = Canvas(self.root, width=self.modele.largeurGrand,
+        def show_game_frame():
+            self.menu_frame.place_forget()
+            self.game_frame.pack()
+
+        def show_score_frame():
+            self.menu_frame.place_forget()
+            self.parent.show_score()
+            self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        def back_to_menu():
+            self.game_frame.pack_forget()
+            self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        def back_to_menu2():
+            self.score_frame.place_forget()
+            self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        def effacer_score():
+            self.parent.effacer_score()
+            updated_score_array = self.parent.show_score()
+
+            updated_score_string = "\n".join(updated_score_array)
+            self.score_label.config(text=updated_score_string)
+
+
+        def difficulte_facile():
+            self.parent.fixer_difficulte(0)
+        def difficulte_moyen():
+            self.parent.fixer_difficulte(1)
+        def difficulte_difficile():
+            self.parent.fixer_difficulte(2)
+
+        # Menu Frame
+        self.menu_frame = Frame(self.root)
+        self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        self.difficulte_frame = Frame(self.menu_frame)
+        self.difficulte_frame.pack(pady=20)
+
+        # Facile Button
+        self.facile_button = ttk.Button(self.difficulte_frame, text="Facile", command=difficulte_facile)
+        self.facile_button.pack(side=LEFT,padx=10)
+
+        # Moyen Button
+        self.moyen_button = ttk.Button(self.difficulte_frame, text="Moyen", command=difficulte_moyen)
+        self.moyen_button.pack(side=LEFT,padx=10)
+
+        # Difficile Button
+        self.difficile_button = ttk.Button(self.difficulte_frame, text="Difficile", command=difficulte_difficile)
+        self.difficile_button.pack(side=LEFT,padx=10)
+
+        self.autres_frame = Frame(self.menu_frame)
+        self.autres_frame.pack()
+
+        # Game Button
+        self.game_button = ttk.Button(self.autres_frame, text="Start Game", command=show_game_frame)
+        self.game_button.pack(pady=10)
+
+        # Score Button
+        self.score_button = ttk.Button(self.autres_frame, text="Score", command=show_score_frame)
+        self.score_button.pack(pady=10)
+
+
+        # Score Frame
+        self.score_frame = Frame(self.root)
+
+        self.score_array = self.parent.show_score()
+
+        self.score_string = "\n".join(self.score_array)
+
+        self.score_label = ttk.Label(self.score_frame, text=self.score_string)
+        self.score_label.pack(pady=10)
+
+        self.effacer_button = ttk.Button(self.score_frame, text="Effacer Scores", command=effacer_score)
+        self.effacer_button.pack()
+
+        self.back_button2 = ttk.Button(self.score_frame, text="Back to Menu", command=back_to_menu2)
+        self.back_button2.pack()
+
+        # Game Frame
+        self.game_frame = Frame(self.root)
+
+        # Back to Menu Button
+        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=back_to_menu)
+        self.back_button.pack()
+
+        self.canevasGros = Canvas(self.game_frame, width=self.modele.largeurGrand,
                                   height=self.modele.hauteurGrand,
                                   bg="black")
+
         self.nomGrosCanveas = self.canevasGros.winfo_name()
 
         self.canevasGros.place(x=0, y=0)
 
-        #self.canevasPetit = Canvas(self.root, width=self.modele.largeurPetit,
-        #                           height=self.modele.hauteurPetit,
-        #                           bg="white")
-
-        # self.canevasPetit.bind("<Button-1>", self.start_drag)  # bouton gauche
-        # self.canevasPetit.bind("<B1-Motion>", self.dragging)
-        # self.canevasPetit.bind("<ButtonRelease-1>", self.end_drag)
         offsetX = (modele.largeurGrand - modele.largeurPetit) / 2
         offsetY = (modele.hauteurGrand - modele.hauteurPetit) / 2
-        #self.canevasPetit.place(x=offsetX, y=offsetY)
-        #self.canevasPetit.lift(self.nomGrosCanveas)
 
         self.canevasGros.bind("<Button-1>", self.start_drag)  # bouton gauche
         self.canevasGros.bind("<B1-Motion>", self.dragging)
@@ -47,20 +126,12 @@ class Vue():
                                           (modele.largeurGrand - modele.largeurPetit) / 2 + modele.largeurPetit,
                                           (modele.hauteurGrand - modele.hauteurPetit) / 2 + modele.hauteurPetit,
                                           fill="white")
-
-
-
-        # self.canevasRect = Canvas(self.root, width=self.modele.largeurGrand,
-        #                           height=self.modele.hauteurGrand,
-        #                           bg="transparentcolor", highlightthickness=0)
-        # self.canevasRect.place(x=0, y=0)
-
-
-        # self.canevasPetit.place(x=(self.modele.largeurGrand - self.modele.largeurPetit) / 2,
-        #                         y=(self.modele.hauteurGrand - self.modele.hauteurPetit) / 2)
+        self.canevasGros.pack()
         self.root.update_idletasks()
-        # bouton_start = Button(self.root, text="Commencer partie", command=self.creer_carre)
-        # bouton_start.pack()
+
+        self.game_frame.pack_forget()
+        self.score_frame.place_forget()
+        sv_ttk.set_theme("dark")
 
     def start_drag(self, event):
         # definit la valeur de offsetx et y
@@ -77,10 +148,6 @@ class Vue():
     def dragging(self, event):
         # CALL CARRE COLLISION
 
-        # width = self.root.winfo_width()
-        # height = self.root.winfo_height()
-        # differenceX = width - self.modele.largeurPetit / 4
-        # differenceY = height - self.modele.hauteurPetit / 2
         # event renvoie les coordonnees relatives au canvas sur lequel le event est bind
         # bouger carre pour suivre curseur
         new_x, new_y = event.x - self.offset_x, event.y - self.offset_y
@@ -95,8 +162,6 @@ class Vue():
         new_y = max(0, min(new_y, max_y))
         print(new_x, new_y)
         # set les nouvelles coordonnees du carre rouge
-        #self.canevasPetit.coords(self.current_carre, new_x, new_y, new_x + self.modele.carres[0].taille,
-        #                         new_y + self.modele.carres[0].taille)
         # newX et y reprensentent le top left coord du carre rouge
         # new_x + self.modele.carres[0].taille et y calculent le bottom right du carre rouge
         # la methode a besoin du top left ET du bottom right pour dessiner le carre en mouvement

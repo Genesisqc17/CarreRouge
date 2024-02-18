@@ -5,12 +5,11 @@ class Controleur():
     def __init__(self):
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
-        self.creer_carre()  # le dit au modele, qui instancie un carre, et la vue laffiche
         self.vue.root.mainloop()
+        self.modele.creer_doc_score_si_nexiste_pas()
 
     def creer_carre(self):
-        self.modele.creer_carre()
-        self.modele.creer_rectangle_aleatoire()
+        self.modele.demarrer_partie()
         self.vue.afficher_blocs()
         # print(len(self.modele.carres))
 
@@ -26,6 +25,16 @@ class Controleur():
     def changer_position(self, new_pos):
         self.modele.changer_position(new_pos)
 
+    def fixer_difficulte(self, niveau):
+        self.modele.fixer_difficulte(niveau)
+        self.creer_carre()
+
+    def show_score(self):
+        self.modele.organiser_scores()
+        return self.modele.lire_score()
+
+    def effacer_score(self):
+        self.modele.effacer_score()
 
 if (__name__ == "__main__"):
     c = Controleur()

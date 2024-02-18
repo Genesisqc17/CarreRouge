@@ -1,6 +1,7 @@
+import os.path
 import random
 from helper import Helper as hp
-
+import csv
 
 class Modele():
     def __init__(self, parent):
@@ -10,8 +11,9 @@ class Modele():
         self.largeurGrand = 650
         self.hauteurGrand = 650
         self.carres = []
-        # self.rectangles = []
-
+        self.difficulte = 0
+        self.document = "./donnee/score.csv"
+        self.document_entetes = ["Nom","Score","Date"]
     def creer_carre(self):
         x = 205
         y = 205
@@ -45,6 +47,60 @@ class Modele():
     def changer_position(self, new_pos):
         self.carres[0].changer_position(new_pos)
 
+    def demarrer_partie(self):
+        self.creer_carre()
+        if(self.difficulte == 0):
+            for i in range(4):
+                self.creer_rectangle_aleatoire()
+        if(self.difficulte == 1):
+            for i in range(6):
+                self.creer_rectangle_aleatoire()
+        if(self.difficulte == 2):
+            for i in range(8):
+                self.creer_rectangle_aleatoire()
+
+    def fixer_difficulte(self, niveau):
+        self.difficulte = niveau
+
+    def creer_doc_score_si_nexiste_pas(self):
+        if not os.path.exists(self.document):
+            with open(self.document,'w',newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerow(self.document_entetes)
+
+    def ecrire_csv(self,data):
+        with open(self.document,'a',newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            for row in data:
+                writer.writerow(row)
+
+    def organiser_scores(self):
+        # parcoure la liste et la reorganise
+        with open(self.document,'r',newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            next(reader) # Skip les entetes
+            sorted_data = sorted(reader, key=lambda row: int(row[1]),reverse=True)
+
+        # overwrite le fichier avec la nouvelle liste ordonnee
+        with open(self.document,'w',newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Nom", "Score", "Date"])
+            for row in sorted_data:
+                writer.writerow(row)
+
+    def lire_score(self):
+        score = []
+        with open(self.document,'r',newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                score.append("\t".join(row))
+        return score
+
+    def effacer_score(self):
+        with open(self.document, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(self.document_entetes)
+
 
 class Carre():
     def __init__(self, parent, x, y):
@@ -70,25 +126,9 @@ class Rectangle(): # BROUILLON
         self.width = width
         self.height = height
         self.color = color
-        #self.vitesse = None
         self.vitesseX = vitX
         self.vitesseY = vitY
 
-
-    # def trouver_cible(self):
-    #     self.cibleX = random.randrange(self.parent.largeur)
-    #     self.cibleY = random.randrange(self.parent.hauteur)
-    #     self.angle = hp.calcAngle(self.posX, self.posY, self.cibleX, self.cibleY)
-
-    # def deplacer(self):
-    #     if self.cibleX:
-    #         self.posX, self.posY = hp.getAngledPoint(self.angle, self.vitesse, self.posX, self.posY)
-    #         dist = hp.calcDistance(self.posX, self.posY, self.cibleX, self.cibleY)
-    #
-    #         if dist <= self.vitesse:
-    #             self.trouver_cible()
-    #     else:
-    #         self.trouver_cible()
 
     def deplacer(self):
         self.posX += self.vitesseX
@@ -104,4 +144,3 @@ class Rectangle(): # BROUILLON
             self.vx = -self.vx  # Reverse X direction
         if self.posY <= 0 or self.posY + self.height >= canvas_height:
             self.vy = -self.vy  # Reverse Y direction
-
