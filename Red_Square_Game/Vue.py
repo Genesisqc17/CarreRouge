@@ -3,6 +3,7 @@ from tkinter import ttk
 from Modele import Carre, Rectangle
 import sv_ttk
 
+
 class Vue():
     def __init__(self, parent, modele):
 
@@ -17,7 +18,8 @@ class Vue():
 
         self.root.geometry("650x650")
         self.root.title("Red Square")
-        #self.root.configure(background="black")
+
+        # self.root.configure(background="black")
 
         def show_game_frame():
             self.menu_frame.place_forget()
@@ -43,11 +45,12 @@ class Vue():
             updated_score_string = "\n".join(updated_score_array)
             self.score_label.config(text=updated_score_string)
 
-
         def difficulte_facile():
             self.parent.fixer_difficulte(0)
+
         def difficulte_moyen():
             self.parent.fixer_difficulte(1)
+
         def difficulte_difficile():
             self.parent.fixer_difficulte(2)
 
@@ -55,20 +58,31 @@ class Vue():
         self.menu_frame = Frame(self.root)
         self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
+        self.menu_title_frame = Frame(self.menu_frame)
+        self.menu_title_frame.pack(expand=True, fill="y")
+
+        self.menu_label_title = ttk.Label(self.menu_title_frame, text="Red", font=('times new roman', 50, 'bold'),
+                                          foreground="red")
+        self.menu_label_title.pack(side=LEFT, padx=10)
+
+        self.canevasTitle = Canvas(self.menu_title_frame, width=50, height=50, bg="red", borderwidth=0)
+        self.canevasTitle.create_rectangle(0, 0, 50, 50, fill="red", outline="")
+        self.canevasTitle.pack(side=LEFT)
+
         self.difficulte_frame = Frame(self.menu_frame)
         self.difficulte_frame.pack(pady=20)
 
         # Facile Button
         self.facile_button = ttk.Button(self.difficulte_frame, text="Facile", command=difficulte_facile)
-        self.facile_button.pack(side=LEFT,padx=10)
+        self.facile_button.pack(side=LEFT, padx=10)
 
         # Moyen Button
         self.moyen_button = ttk.Button(self.difficulte_frame, text="Moyen", command=difficulte_moyen)
-        self.moyen_button.pack(side=LEFT,padx=10)
+        self.moyen_button.pack(side=LEFT, padx=10)
 
         # Difficile Button
         self.difficile_button = ttk.Button(self.difficulte_frame, text="Difficile", command=difficulte_difficile)
-        self.difficile_button.pack(side=LEFT,padx=10)
+        self.difficile_button.pack(side=LEFT, padx=10)
 
         self.autres_frame = Frame(self.menu_frame)
         self.autres_frame.pack()
@@ -80,7 +94,6 @@ class Vue():
         # Score Button
         self.score_button = ttk.Button(self.autres_frame, text="Score", command=show_score_frame)
         self.score_button.pack(pady=10)
-
 
         # Score Frame
         self.score_frame = Frame(self.root)
@@ -119,7 +132,6 @@ class Vue():
         self.canevasGros.bind("<Button-1>", self.start_drag)  # bouton gauche
         self.canevasGros.bind("<B1-Motion>", self.dragging)
         self.canevasGros.bind("<ButtonRelease-1>", self.end_drag)
-
 
         self.canevasGros.create_rectangle((modele.largeurGrand - modele.largeurPetit) / 2,
                                           (modele.hauteurGrand - modele.hauteurPetit) / 2,
@@ -165,8 +177,7 @@ class Vue():
         # newX et y reprensentent le top left coord du carre rouge
         # new_x + self.modele.carres[0].taille et y calculent le bottom right du carre rouge
         # la methode a besoin du top left ET du bottom right pour dessiner le carre en mouvement
-        self.parent.changer_position((new_x,new_y))
-
+        self.parent.changer_position((new_x, new_y))
 
     def end_drag(self, event):
         self.current_carre = None  # Clear carre
@@ -179,22 +190,24 @@ class Vue():
 
         self.canevasGros.create_rectangle((self.modele.largeurGrand - self.modele.largeurPetit) / 2,
                                           (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2,
-                                          (self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
-                                          (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
+                                          (
+                                                      self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
+                                          (
+                                                      self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
                                           fill="white")
 
         for i in self.modele.carres:
-            if(isinstance(i, Carre)):
+            if (isinstance(i, Carre)):
                 self.canevasGros.create_rectangle(i.posX, i.posY,
-                                               i.posX + i.taille,
-                                               i.posY + i.taille, fill="red",
-                                               outline="white",
-                                               tags=("red-square",))
+                                                  i.posX + i.taille,
+                                                  i.posY + i.taille, fill="red",
+                                                  outline="white",
+                                                  tags=("red-square",))
         for rect in self.modele.carres:
-            if(isinstance(rect, Rectangle)):
+            if (isinstance(rect, Rectangle)):
                 self.canevasGros.create_rectangle(rect.posX, rect.posY,
-                                               rect.posX + rect.width,
-                                               rect.posY + rect.height,
-                                               fill=rect.color,
-                                               outline="white",
-                                               tags=(rect.color + "-rectangle",))
+                                                  rect.posX + rect.width,
+                                                  rect.posY + rect.height,
+                                                  fill=rect.color,
+                                                  outline="white",
+                                                  tags=(rect.color + "-rectangle",))
