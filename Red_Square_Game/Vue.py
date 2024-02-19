@@ -1,6 +1,7 @@
 from tkinter import *
-
+from tkinter import ttk
 from Modele import Carre, Rectangle
+import sv_ttk
 
 
 class Vue():
@@ -9,25 +10,118 @@ class Vue():
         self.parent = parent
         self.modele = modele
         self.root = Tk()
-        # monLabel = Label(self.root, text="Le jeu du carre rouge")
-        # monLabel.pack()
         self.offset_x = 0
         self.offset_y = 0
         self.current_carre = None
 
-        self.root.geometry("850x650")
-        self.root.configure(background="black")
+        self.root.geometry("650x650")
+        self.root.title("Red Square")
+        self.mes_frames = {"menu":self.creer_menu_frame(),
+                           "score":self.creer_score_frame(),
+                           "game":self.creer_game_frame()}
+        self.frame_active = None
 
-        self.canevasGros = Canvas(self.root, width=self.modele.largeurGrand,
+        self.changer_frame("menu")
+
+    def changer_frame(self, cle):
+        if self.frame_active:
+            self.frame_active.pack_forget()
+        self.frame_active = self.mes_frames[cle]
+        self.frame_active.pack()
+
+    def afficher_menu(self):
+        self.changer_frame("menu")
+
+    def afficher_score(self):
+        self.changer_frame("score")
+
+    def afficher_game(self):
+        self.changer_frame("game")
+
+    def creer_menu_frame(self):
+        # Menu Frame
+        self.menu_frame = Frame(self.root)
+
+
+        self.menu_title_frame = Frame(self.menu_frame)
+        self.menu_title_frame.pack(expand=True, fill="y")
+
+        self.menu_label_title = ttk.Label(self.menu_title_frame, text="Red", font=('times new roman', 50, 'bold'),
+                                          foreground="red")
+        self.menu_label_title.pack(side=LEFT, padx=10)
+
+        self.canevasTitle = Canvas(self.menu_title_frame, width=50, height=50, bg="red", borderwidth=0)
+        self.canevasTitle.create_rectangle(0, 0, 50, 50, fill="red", outline="")
+        self.canevasTitle.pack(side=LEFT)
+
+        self.difficulte_frame = Frame(self.menu_frame)
+        self.difficulte_frame.pack(pady=20)
+
+        # Facile Button
+        self.facile_button = ttk.Button(self.difficulte_frame, text="Facile", command=self.difficulte_facile)
+        self.facile_button.pack(side=LEFT, padx=10)
+
+        # Moyen Button
+        self.moyen_button = ttk.Button(self.difficulte_frame, text="Moyen", command=self.difficulte_moyen)
+        self.moyen_button.pack(side=LEFT, padx=10)
+
+        # Difficile Button
+        self.difficile_button = ttk.Button(self.difficulte_frame, text="Difficile", command=self.difficulte_difficile)
+        self.difficile_button.pack(side=LEFT, padx=10)
+
+        self.autres_frame = Frame(self.menu_frame)
+        self.autres_frame.pack()
+
+        # Game Button
+        self.game_button = ttk.Button(self.autres_frame, text="Start Game", command=self.afficher_game)
+        self.game_button.pack(pady=10)
+
+        # Score Button
+        self.score_button = ttk.Button(self.autres_frame, text="Score", command=self.afficher_score)
+        self.score_button.pack(pady=10)
+
+        sv_ttk.set_theme("dark")
+        #self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        return self.menu_frame
+
+    def creer_score_frame(self):
+        # Score Frame
+        self.score_frame = Frame(self.root)
+
+        self.score_array = self.parent.show_score()
+
+        self.score_string = "\n".join(self.score_array)
+
+        self.score_label = ttk.Label(self.score_frame, text=self.score_string)
+        self.score_label.pack(pady=10)
+
+        self.effacer_button = ttk.Button(self.score_frame, text="Effacer Scores", command=self.effacer_score)
+        self.effacer_button.pack()
+
+        self.back_button2 = ttk.Button(self.score_frame, text="Back to Menu", command=self.afficher_menu)
+        self.back_button2.pack()
+
+        #self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+        sv_ttk.set_theme("dark")
+
+        return self.score_frame
+
+    def creer_game_frame(self):
+        # Game Frame
+        self.game_frame = Frame(self.root)
+
+        # Back to Menu Button
+        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=self.afficher_menu)
+        self.back_button.pack()
+
+        self.canevasGros = Canvas(self.game_frame, width=self.modele.largeurGrand,
                                   height=self.modele.hauteurGrand,
                                   bg="black")
+
         self.nomGrosCanveas = self.canevasGros.winfo_name()
 
         self.canevasGros.place(x=0, y=0)
-        self.carreBlanc = None
-        self.carreRouge = None
-        self.rectBlanc = None
-
 
         self.canevasGros.tag_bind("red-square", "<Button-1>", self.start_drag)  # bouton gauche sur le carré rouge
         # self.canevasGros.tag_bind("red-square", "<B1-Motion>", self.dragging)  # déplacement du carré rouge
@@ -35,8 +129,58 @@ class Vue():
         self.canevasGros.tag_bind("red-square", "<ButtonRelease-1>",
                                   self.end_drag)  # relâchement du bouton sur le carré rouge
 
+        offsetX = (self.modele.largeurGrand - self.modele.largeurPetit) / 2
+        offsetY = (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2
 
+        self.canevasGros.bind("<Button-1>", self.start_drag)  # bouton gauche
+        self.canevasGros.bind("<B1-Motion>", self.dragging)
+        self.canevasGros.bind("<ButtonRelease-1>", self.end_drag)
 
+        self.canevasGros.create_rectangle((self.modele.largeurGrand - self.modele.largeurPetit) / 2,
+                                          (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2,
+                                          (self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
+                                          (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
+                                          fill="white")
+        self.canevasGros.pack()
+        self.root.update_idletasks()
+
+        sv_ttk.set_theme("dark")
+        #self.game_frame.place(relx=0, rely=0)
+
+        return self.game_frame
+
+    # def show_game_frame(self):
+    #     self.menu_frame.place_forget()
+    #     self.game_frame.pack()
+    #
+    # def show_score_frame(self):
+    #     self.menu_frame.place_forget()
+    #     self.parent.show_score()
+    #     self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    #
+    # def back_to_menu(self):
+    #     self.game_frame.pack_forget()
+    #     self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    #
+    # def back_to_menu2(self):
+    #     self.score_frame.place_forget()
+    #     self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    def effacer_score(self):
+        self.parent.effacer_score()
+        updated_score_array = self.parent.show_score()
+
+        updated_score_string = "\n".join(updated_score_array)
+        self.score_label.config(text=updated_score_string)
+
+    def difficulte_facile(self):
+        self.parent.fixer_difficulte(0)
+
+    def difficulte_moyen(self):
+        self.parent.fixer_difficulte(1)
+
+    def difficulte_difficile(self):
+        self.parent.fixer_difficulte(2)
 
     def start_drag(self, event):
         # definit la valeur de offsetx et y
@@ -76,7 +220,6 @@ class Vue():
             # self.canevasGros.coords(self.current_carre, new_x, new_y, new_x2, new_y2)
 
 
-
     def end_drag(self, event):
         self.current_carre = None  # Clear carre
         self.parent.animationStarted = False
@@ -89,8 +232,10 @@ class Vue():
 
         self.rectBlanc = self.canevasGros.create_rectangle((self.modele.largeurGrand - self.modele.largeurPetit) / 2,
                                           (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2,
-                                          (self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
-                                          (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
+                                          (
+                                                      self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
+                                          (
+                                                      self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
                                           fill="white")
 
         for i in self.modele.blocs:
