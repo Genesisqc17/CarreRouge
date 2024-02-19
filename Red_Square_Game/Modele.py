@@ -11,21 +11,28 @@ class Modele():
         self.largeurGrand = 650 # renommer en zone jeu
         self.hauteurGrand = 650
         self.blocs = []
-        self.nbRect = 4
         self.squareHasBeenClicked = False
         self.enVie = True
-        self.creer_blocs()
+        self.nbRect = None
         self.difficulte = 0
+        self.creer_blocs()
         self.document = "./donnee/score.csv"
         self.document_entetes = ["Nom","Score","Date"]
 
     def creer_blocs(self):
         self.creer_carre()
+        if (self.difficulte == 0):
+            self.nbRect = 4
+
+        if (self.difficulte == 1):
+            self.nbRect = 6
+
+        if (self.difficulte == 2):
+            self.nbRect = 8
         for i in range(self.nbRect):
             self.creer_rectangle_aleatoire()
 
-        # self.parent.afficher_blocs()
-        # print(len(self.modele.carres))
+
 
     def creer_carre(self):
         x = self.largeurGrand/2 - 20
@@ -74,29 +81,14 @@ class Modele():
         for i in self.blocs:
             if (isinstance(i, Rectangle)):
                 i.deplacer()
-    # def deplacer_rectangles2(self):
-    #     for r in self.blocs:
-    #         if (isinstance(r, Rectangle)):
-    #             r.deplacer()
-    #             r.collision_mur()
-    #             r.collision_carre()]
+
 
 
     def changer_position(self, new_pos): # pour carre uniquement
         self.blocs[0].changer_position(new_pos)
 
 
-    def demarrer_partie(self):
-        self.creer_carre()
-        if(self.difficulte == 0):
-            for i in range(4):
-                self.creer_rectangle_aleatoire()
-        if(self.difficulte == 1):
-            for i in range(6):
-                self.creer_rectangle_aleatoire()
-        if(self.difficulte == 2):
-            for i in range(8):
-                self.creer_rectangle_aleatoire()
+
 
     def fixer_difficulte(self, niveau):
         self.difficulte = niveau

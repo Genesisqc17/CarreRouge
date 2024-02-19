@@ -5,12 +5,17 @@ class Controleur():
     def __init__(self):
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
-        self.vue.afficher_blocs()
         # self.creer_blocs()  # le dit au modele, qui instancie un carre, et les rectangles et la vue les affiche
+        self.vue.afficher_blocs()
         self.animationStarted = False
+
         self.vue.root.mainloop()
         self.modele.creer_doc_score_si_nexiste_pas()
 
+
+
+
+   
     def afficher_blocs(self):
        self.vue.afficher_blocs()
 
@@ -39,7 +44,7 @@ class Controleur():
 
     def fixer_difficulte(self, niveau):
         self.modele.fixer_difficulte(niveau)
-        self.creer_carre()
+        # self.modele.creer_blocs()
 
     def show_score(self):
         self.modele.organiser_scores()

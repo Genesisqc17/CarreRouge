@@ -213,7 +213,7 @@ class Vue():
 
     def end_drag(self, event):
         self.current_carre = None  # Clear carre
-        self.parent.animationStarted = False
+        # self.parent.animationStarted = False
 
 
     def afficher_blocs(self):
