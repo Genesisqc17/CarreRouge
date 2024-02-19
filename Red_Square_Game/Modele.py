@@ -109,12 +109,6 @@ class Carre():
         self.posX = x
         self.posY = y
 
-        #self.cibleX= None
-        #self.cibleY = None
-        #self.angle = None
-        #self.vitesse =5
-        # pourquoi est-ce qu'on a besoin de ses params si c'est la souris qui le bouge?
-
     def changer_position(self, new_pos):
         self.posX, self.posY = new_pos
 

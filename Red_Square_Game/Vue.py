@@ -10,53 +10,38 @@ class Vue():
         self.parent = parent
         self.modele = modele
         self.root = Tk()
-        # monLabel = Label(self.root, text="Le jeu du carre rouge")
-        # monLabel.pack()
         self.offset_x = 0
         self.offset_y = 0
         self.current_carre = None
 
         self.root.geometry("650x650")
         self.root.title("Red Square")
+        self.mes_frames = {"menu":self.creer_menu_frame(),
+                           "score":self.creer_score_frame(),
+                           "game":self.creer_game_frame()}
+        self.frame_active = None
 
-        # self.root.configure(background="black")
+        self.changer_frame("menu")
 
-        def show_game_frame():
-            self.menu_frame.place_forget()
-            self.game_frame.pack()
+    def changer_frame(self, cle):
+        if self.frame_active:
+            self.frame_active.pack_forget()
+        self.frame_active = self.mes_frames[cle]
+        self.frame_active.pack()
 
-        def show_score_frame():
-            self.menu_frame.place_forget()
-            self.parent.show_score()
-            self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    def afficher_menu(self):
+        self.changer_frame("menu")
 
-        def back_to_menu():
-            self.game_frame.pack_forget()
-            self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    def afficher_score(self):
+        self.changer_frame("score")
 
-        def back_to_menu2():
-            self.score_frame.place_forget()
-            self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    def afficher_game(self):
+        self.changer_frame("game")
 
-        def effacer_score():
-            self.parent.effacer_score()
-            updated_score_array = self.parent.show_score()
-
-            updated_score_string = "\n".join(updated_score_array)
-            self.score_label.config(text=updated_score_string)
-
-        def difficulte_facile():
-            self.parent.fixer_difficulte(0)
-
-        def difficulte_moyen():
-            self.parent.fixer_difficulte(1)
-
-        def difficulte_difficile():
-            self.parent.fixer_difficulte(2)
-
+    def creer_menu_frame(self):
         # Menu Frame
         self.menu_frame = Frame(self.root)
-        self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
 
         self.menu_title_frame = Frame(self.menu_frame)
         self.menu_title_frame.pack(expand=True, fill="y")
@@ -73,28 +58,34 @@ class Vue():
         self.difficulte_frame.pack(pady=20)
 
         # Facile Button
-        self.facile_button = ttk.Button(self.difficulte_frame, text="Facile", command=difficulte_facile)
+        self.facile_button = ttk.Button(self.difficulte_frame, text="Facile", command=self.difficulte_facile)
         self.facile_button.pack(side=LEFT, padx=10)
 
         # Moyen Button
-        self.moyen_button = ttk.Button(self.difficulte_frame, text="Moyen", command=difficulte_moyen)
+        self.moyen_button = ttk.Button(self.difficulte_frame, text="Moyen", command=self.difficulte_moyen)
         self.moyen_button.pack(side=LEFT, padx=10)
 
         # Difficile Button
-        self.difficile_button = ttk.Button(self.difficulte_frame, text="Difficile", command=difficulte_difficile)
+        self.difficile_button = ttk.Button(self.difficulte_frame, text="Difficile", command=self.difficulte_difficile)
         self.difficile_button.pack(side=LEFT, padx=10)
 
         self.autres_frame = Frame(self.menu_frame)
         self.autres_frame.pack()
 
         # Game Button
-        self.game_button = ttk.Button(self.autres_frame, text="Start Game", command=show_game_frame)
+        self.game_button = ttk.Button(self.autres_frame, text="Start Game", command=self.afficher_game)
         self.game_button.pack(pady=10)
 
         # Score Button
-        self.score_button = ttk.Button(self.autres_frame, text="Score", command=show_score_frame)
+        self.score_button = ttk.Button(self.autres_frame, text="Score", command=self.afficher_score)
         self.score_button.pack(pady=10)
 
+        sv_ttk.set_theme("dark")
+        #self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+        return self.menu_frame
+
+    def creer_score_frame(self):
         # Score Frame
         self.score_frame = Frame(self.root)
 
@@ -105,17 +96,23 @@ class Vue():
         self.score_label = ttk.Label(self.score_frame, text=self.score_string)
         self.score_label.pack(pady=10)
 
-        self.effacer_button = ttk.Button(self.score_frame, text="Effacer Scores", command=effacer_score)
+        self.effacer_button = ttk.Button(self.score_frame, text="Effacer Scores", command=self.effacer_score)
         self.effacer_button.pack()
 
-        self.back_button2 = ttk.Button(self.score_frame, text="Back to Menu", command=back_to_menu2)
+        self.back_button2 = ttk.Button(self.score_frame, text="Back to Menu", command=self.afficher_menu)
         self.back_button2.pack()
 
+        #self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+        sv_ttk.set_theme("dark")
+
+        return self.score_frame
+
+    def creer_game_frame(self):
         # Game Frame
         self.game_frame = Frame(self.root)
 
         # Back to Menu Button
-        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=back_to_menu)
+        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=self.afficher_menu)
         self.back_button.pack()
 
         self.canevasGros = Canvas(self.game_frame, width=self.modele.largeurGrand,
@@ -126,24 +123,58 @@ class Vue():
 
         self.canevasGros.place(x=0, y=0)
 
-        offsetX = (modele.largeurGrand - modele.largeurPetit) / 2
-        offsetY = (modele.hauteurGrand - modele.hauteurPetit) / 2
+        offsetX = (self.modele.largeurGrand - self.modele.largeurPetit) / 2
+        offsetY = (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2
 
         self.canevasGros.bind("<Button-1>", self.start_drag)  # bouton gauche
         self.canevasGros.bind("<B1-Motion>", self.dragging)
         self.canevasGros.bind("<ButtonRelease-1>", self.end_drag)
 
-        self.canevasGros.create_rectangle((modele.largeurGrand - modele.largeurPetit) / 2,
-                                          (modele.hauteurGrand - modele.hauteurPetit) / 2,
-                                          (modele.largeurGrand - modele.largeurPetit) / 2 + modele.largeurPetit,
-                                          (modele.hauteurGrand - modele.hauteurPetit) / 2 + modele.hauteurPetit,
+        self.canevasGros.create_rectangle((self.modele.largeurGrand - self.modele.largeurPetit) / 2,
+                                          (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2,
+                                          (self.modele.largeurGrand - self.modele.largeurPetit) / 2 + self.modele.largeurPetit,
+                                          (self.modele.hauteurGrand - self.modele.hauteurPetit) / 2 + self.modele.hauteurPetit,
                                           fill="white")
         self.canevasGros.pack()
         self.root.update_idletasks()
 
-        self.game_frame.pack_forget()
-        self.score_frame.place_forget()
         sv_ttk.set_theme("dark")
+        #self.game_frame.place(relx=0, rely=0)
+
+        return self.game_frame
+
+    # def show_game_frame(self):
+    #     self.menu_frame.place_forget()
+    #     self.game_frame.pack()
+    #
+    # def show_score_frame(self):
+    #     self.menu_frame.place_forget()
+    #     self.parent.show_score()
+    #     self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    #
+    # def back_to_menu(self):
+    #     self.game_frame.pack_forget()
+    #     self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+    #
+    # def back_to_menu2(self):
+    #     self.score_frame.place_forget()
+    #     self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+
+    def effacer_score(self):
+        self.parent.effacer_score()
+        updated_score_array = self.parent.show_score()
+
+        updated_score_string = "\n".join(updated_score_array)
+        self.score_label.config(text=updated_score_string)
+
+    def difficulte_facile(self):
+        self.parent.fixer_difficulte(0)
+
+    def difficulte_moyen(self):
+        self.parent.fixer_difficulte(1)
+
+    def difficulte_difficile(self):
+        self.parent.fixer_difficulte(2)
 
     def start_drag(self, event):
         # definit la valeur de offsetx et y
