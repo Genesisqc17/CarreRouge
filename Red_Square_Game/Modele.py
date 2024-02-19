@@ -13,7 +13,15 @@ class Modele():
         self.nbRect = 4
         self.squareHasBeenClicked = False
         self.enVie = True
+        self.creer_blocs()
 
+    def creer_blocs(self):
+        self.creer_carre()
+        for i in range(self.nbRect):
+            self.creer_rectangle_aleatoire()
+
+        # self.parent.afficher_blocs()
+        # print(len(self.modele.carres))
 
     def creer_carre(self):
         x = self.largeurGrand/2 - 20
@@ -35,21 +43,30 @@ class Modele():
         x = random.randint(0, self.largeurPetit - width)
         y = random.randint(0, self.hauteurPetit - height)
 
-        vitX = 2 * (random.randint(0,1)) - 1
-        vitY = 2 * (random.randint(0,1)) - 1
+        # vitX = 2 * (random.randint(0,1)) - 1
+        # vitY = 2 * (random.randint(0,1)) - 1
+        vitX = 2
+        vitY = 2
 
         rect = Rectangle(self, x, y, vitX, vitY, width, height, "blue")
         self.blocs.append(rect)
 
     def deplacer_rectangles(self):
-        for r in self.blocs:
-            if (isinstance(r, Rectangle)):
-                r.deplacer()
-                r.collision_mur()
-                r.collision_carre()
+
+        for i in self.blocs:
+            if (isinstance(i, Rectangle)):
+                i.deplacer()
+    # def deplacer_rectangles2(self):
+    #     for r in self.blocs:
+    #         if (isinstance(r, Rectangle)):
+    #             r.deplacer()
+    #             r.collision_mur()
+    #             r.collision_carre()]
+
 
     def changer_position(self, new_pos): # pour carre uniquement
         self.blocs[0].changer_position(new_pos)
+
 
 
 class Carre():
@@ -62,18 +79,20 @@ class Carre():
 
     def changer_position(self, new_pos):
         self.posX, self.posY = new_pos
+
         # mecanique pour limiter le mouvement du rectangle blanc
         items_with_tag = self.parent.parent.vue.canevasGros.find_withtag("red-square")
         if items_with_tag:
             carre = items_with_tag[0]
             current_pos = self.parent.parent.vue.canevasGros.coords(carre)
-            # print(current_pos)
+
+            # ZONE BLANCHE
             if ((current_pos[0] <= (self.parent.largeurGrand - self.parent.largeurPetit) / 2) or
                     (current_pos[1] <= (self.parent.hauteurGrand - self.parent.hauteurPetit) / 2) or
                     (current_pos[2] >= (self.parent.largeurGrand - self.parent.largeurPetit) / 2 + self.parent.largeurPetit) or
                     (current_pos[3] >= (self.parent.hauteurGrand - self.parent.hauteurPetit) / 2 + self.parent.hauteurPetit)):
                     self.parent.enVie = False
-                    print(self.parent.enVie)
+                    # print("YOUPIIIIII")
 
 
 
@@ -95,6 +114,9 @@ class Rectangle(): # BROUILLON
     def deplacer(self):
         self.posX += self.vitesseX
         self.posY += self.vitesseY
+        self.collision_mur()
+        self.collision_carre()
+
 
 
 
@@ -115,12 +137,17 @@ class Rectangle(): # BROUILLON
         if tag_carre and tag_rectangle:
             carre = tag_carre[0]
             for rectangle in tag_rectangle:
-                current_pos_carre = self.parent.parent.vue.canevasGros.coords(carre)
-                current_pos_rectangle = self.parent.parent.vue.canevasGros.coords(rectangle)
-                if ((current_pos_carre[0] == current_pos_rectangle[0]) or
-                    (current_pos_carre[1] == current_pos_rectangle[1]) or
-                    (current_pos_carre[2] == current_pos_rectangle[2]) or
-                    (current_pos_carre[3] == current_pos_rectangle[3])):
-                        self.parent.enVie = False
-                        print(self.parent.enVie)
+                pos_carre = self.parent.parent.vue.canevasGros.coords(carre)
+                pos_rectangle = self.parent.parent.vue.canevasGros.coords(rectangle)
+                # print("position courante carre : " + str(current_pos_carre[0]) +"  " + str(current_pos_carre[1]) +"  " + str(current_pos_carre[2]) +"  " + str(current_pos_carre[3]))
+                # print("PosX PosY: " + str(self.posX) +"  " +  str(self.posY) + " coin droit " + str(self.posX + self.taille) + " " + str(self.posY + self.taille))
+            # print(current_pos)
 
+                if not (pos_carre[2] < pos_rectangle[0] or  # square's right < rectangle's left
+                        pos_carre[0] > pos_rectangle[2] or  # square's left > rectangle's right
+                        pos_carre[3] < pos_rectangle[1] or  # square's bottom < rectangle's top
+                        pos_carre[1] > pos_rectangle[3]):  # square's top > rectangle's bottom
+                    # Overlap detected
+                    self.parent.enVie = False
+                    print(self.parent.enVie)
+                    # return  # Exit after finding any overlap to avoid unnecessary checks
