@@ -7,5 +7,7 @@
 4. [] Collision entre le carre et la zone blanche
 5. [] Mechanique de Partie (Fin de partie / Reboot)
 6. [] Menu
-7. [] Liste des scores
-8. [] Ouverture / Write or Read / Fermeture Fichier Score.txt
+   6.1. [X] Menu
+   6.2. [x] menu score
+8. [] Liste des scores
+9. [] Ouverture / Write or Read / Fermeture Fichier Score.txt
