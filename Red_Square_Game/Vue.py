@@ -24,9 +24,7 @@ class Vue():
         self.nomGrosCanveas = self.canevasGros.winfo_name()
 
         self.canevasGros.place(x=0, y=0)
-        self.carreBlanc = None
-        self.carreRouge = None
-        self.rectBlanc = None
+
 
 
         self.canevasGros.tag_bind("red-square", "<Button-1>", self.start_drag)  # bouton gauche sur le carré rouge
@@ -39,14 +37,11 @@ class Vue():
 
 
     def start_drag(self, event):
-        # definit la valeur de offsetx et y
-          # Pour ne pas que la fonction animer soit spammee et que les rect bleus aillent de pllus en plus vite
-        # self.parent.animationStarted = True
-        # self.parent.animer()
+
         self.parent.startGame()
 
         items_with_tag = self.canevasGros.find_withtag("red-square")
-        # print(items_with_tag) # fonctionne
+
 
         if items_with_tag:
             self.current_carre = items_with_tag[0] # un seul carre
@@ -60,20 +55,13 @@ class Vue():
 
 
     def dragging(self, event):
-        # print("dragging")
-        # revenir apres
+
         items_with_tag = self.canevasGros.find_withtag("red-square")
 
         if items_with_tag:
 
             new_x, new_y = event.x - self.offset_x, event.y - self.offset_y
             self.parent.changer_position((new_x,new_y))
-            # new_x2, new_y2 = new_x + self.modele.blocs[0].taille, new_y + self.modele.blocs[0].taille
-
-            # for i in self.modele.blocs:# a deplacer pour donner ca au controleur qui auras seulement newx newy
-            #     if (isinstance(i, Carre)):
-            #         i.changer_position((new_x,new_y)) # mecanique de mouvement dans la classe Carre
-            # self.canevasGros.coords(self.current_carre, new_x, new_y, new_x2, new_y2)
 
 
 
@@ -81,8 +69,6 @@ class Vue():
         self.current_carre = None  # Clear carre
         self.parent.animationStarted = False
 
-    # def creer_carre(self):
-    #     self.parent.creer_carre()  # demande cette fonction au controleur
 
     def afficher_blocs(self):
         self.canevasGros.delete("all")
@@ -108,11 +94,3 @@ class Vue():
                                                   outline="white",
                                                   tags=(i.color + "-rectangle",))
 
-        # for rect in self.modele.blocs:
-        #     if(isinstance(rect, Rectangle)):
-        #         self.canevasGros.create_rectangle(rect.posX, rect.posY,
-        #                                        rect.posX + rect.width,
-        #                                        rect.posY + rect.height,
-        #                                        fill=rect.color,
-        #                                        outline="white",
-        #                                        tags=(rect.color + "-rectangle",))
