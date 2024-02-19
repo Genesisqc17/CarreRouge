@@ -14,6 +14,7 @@ class Controleur():
     def afficher_blocs(self):
        self.vue.afficher_blocs()
 
+
     def deplacer_rectangles(self):
         self.modele.deplacer_rectangles() # contient deplacer et collision mur de Rectangle
 
