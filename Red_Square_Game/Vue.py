@@ -36,7 +36,9 @@ class Vue():
         self.changer_frame("score")
 
     def afficher_game(self):
+        self.parent.difficulte_choisie()
         self.changer_frame("game")
+
 
     def creer_menu_frame(self):
         # Menu Frame
@@ -176,12 +178,15 @@ class Vue():
 
     def difficulte_facile(self):
         self.parent.fixer_difficulte(0)
+        print("difficulte fixee a facile dans la vue")
 
     def difficulte_moyen(self):
         self.parent.fixer_difficulte(1)
+        print("difficulte fixee a moyen dans la vue")
 
     def difficulte_difficile(self):
         self.parent.fixer_difficulte(2)
+        print("difficulte fixee a difficile dans la vue")
 
     def start_drag(self, event):
 

@@ -15,14 +15,15 @@ class Modele():
         self.enVie = True
         self.nbRect = None
         self.difficulte = 0
-        self.creer_blocs()
         self.document = "./donnee/score.csv"
         self.document_entetes = ["Nom","Score","Date"]
 
     def creer_blocs(self):
+        print("dans creer-blocs")
         self.creer_carre()
         if (self.difficulte == 0):
             self.nbRect = 4
+            print("if self.difficulte == 0")
 
         if (self.difficulte == 1):
             self.nbRect = 6

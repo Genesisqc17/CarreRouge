@@ -6,16 +6,24 @@ class Controleur():
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
         # self.creer_blocs()  # le dit au modele, qui instancie un carre, et les rectangles et la vue les affiche
-        self.vue.afficher_blocs()
+
+
+        self.difficulteChoisie = False
         self.animationStarted = False
 
+
+        # self.modele.creer_blocs()
+        # print("blocs crees dans le controleur")
+        # self.afficher_blocs()
+        # print("blocs afifches dans le controleur")
         self.vue.root.mainloop()
         self.modele.creer_doc_score_si_nexiste_pas()
 
+    def difficulte_choisie(self):
+        print("dans difficulte choisie()")
+        self.modele.creer_blocs()
+        self.afficher_blocs()
 
-
-
-   
     def afficher_blocs(self):
        self.vue.afficher_blocs()
 
@@ -27,6 +35,7 @@ class Controleur():
     def startGame(self):
         if not self.animationStarted:
             self.animationStarted = True
+
             self.animer()
 
     def animer(self):
