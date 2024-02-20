@@ -31,7 +31,10 @@ class Modele():
         self.score = float(formatted_score)
 
     def resetGame(self):
-        self.blocs = []
+        print("dans resetGame du modele")
+        self.blocs.clear()
+
+        # self.blocs = []
         self.squareHasBeenClicked = False
         self.enVie = True
         self.nbRect = None
@@ -39,14 +42,13 @@ class Modele():
         self.tempsDebut = None
         self.tempsFin = None
         self.score = None
-        self.parent.difficulte_choisie()
 
     def creer_blocs(self):
         print("dans creer-blocs")
         self.creer_carre()
         if (self.difficulte == 0):
             self.nbRect = 4
-            print("if self.difficulte == 0")
+            # print("if self.difficulte == 0")
 
         if (self.difficulte == 1):
             self.nbRect = 6

@@ -23,6 +23,10 @@ class Vue():
 
         self.changer_frame("menu")
 
+    def deuxActions(self):
+        self.afficher_menu()
+        self.parent.resetGame()
+
     def changer_frame(self, cle):
         if self.frame_active:
             self.frame_active.pack_forget()
@@ -114,7 +118,7 @@ class Vue():
         self.game_frame = Frame(self.root)
 
         # Back to Menu Button
-        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=self.afficher_menu)
+        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=self.deuxActions)
         self.back_button.pack()
 
         self.canevasGros = Canvas(self.game_frame, width=self.modele.largeurGrand,

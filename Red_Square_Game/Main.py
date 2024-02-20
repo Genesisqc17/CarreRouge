@@ -22,14 +22,16 @@ class Controleur():
 
 
     def resetGame(self):
+        print("dans resetGame du controlleur")
+        self.vue.root.after_cancel(self.nextloop)
+        self.modele.resetGame()
         self.partieRecommencee = False
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
-        self.vue.root.after_cancel(self.nextloop)
-        self.modele.resetGame()
-        self.vue.canevasGros.delete("all")
-        self.afficher_blocs()
+
+
+
 
 
 
