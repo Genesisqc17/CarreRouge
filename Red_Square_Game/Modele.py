@@ -2,6 +2,7 @@ import os.path
 import random
 from helper import Helper as hp
 import csv
+import time
 
 class Modele():
     def __init__(self, parent):
@@ -17,6 +18,28 @@ class Modele():
         self.difficulte = 0
         self.document = "./donnee/score.csv"
         self.document_entetes = ["Nom","Score","Date"]
+        self.tempsDebut = None
+        self.tempsFin = None
+        self.score = None
+
+    def startTimer(self):
+        self.tempsDebut = time.time()
+    def gameStop(self):
+        self.tempsFin = time.time()
+        tempscore = self.tempsFin - self.tempsDebut
+        formatted_score = "{:.2f}".format(tempscore)
+        self.score = float(formatted_score)
+
+    def resetGame(self):
+        self.blocs = []
+        self.squareHasBeenClicked = False
+        self.enVie = True
+        self.nbRect = None
+        self.difficulte = 0
+        self.tempsDebut = None
+        self.tempsFin = None
+        self.score = None
+        self.parent.difficulte_choisie()
 
     def creer_blocs(self):
         print("dans creer-blocs")

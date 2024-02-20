@@ -1,16 +1,17 @@
 import Modele as mod
 import Vue as vue
 
+
 class Controleur():
     def __init__(self):
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
         # self.creer_blocs()  # le dit au modele, qui instancie un carre, et les rectangles et la vue les affiche
 
-
+        self.partieRecommencee = False
         self.difficulteChoisie = False
         self.animationStarted = False
-
+        self.nextloop = None
 
         # self.modele.creer_blocs()
         # print("blocs crees dans le controleur")
@@ -18,6 +19,19 @@ class Controleur():
         # print("blocs afifches dans le controleur")
         self.vue.root.mainloop()
         self.modele.creer_doc_score_si_nexiste_pas()
+
+
+    def resetGame(self):
+        self.partieRecommencee = False
+        self.difficulteChoisie = False
+        self.animationStarted = False
+        self.nextloop = None
+        self.vue.root.after_cancel(self.nextloop)
+        self.modele.resetGame()
+        self.vue.canevasGros.delete("all")
+        self.afficher_blocs()
+
+
 
     def difficulte_choisie(self):
         print("dans difficulte choisie()")
@@ -37,12 +51,22 @@ class Controleur():
             self.animationStarted = True
 
             self.animer()
+            self.modele.startTimer()
 
     def animer(self):
         if self.animationStarted:
             self.modele.deplacer_rectangles() # faudra le mettre dans les limites du carre noir
             self.vue.afficher_blocs()
-            self.nextloop = self.vue.root.after(12, self.animer)
+            # fonction checkGameState()
+
+            if not self.modele.enVie:
+                self.modele.gameStop()
+            # elif self.partieRecommencee:
+            #
+            #
+
+            else:
+                self.nextloop = self.vue.root.after(12, self.animer)
         else :
             if self.nextloop:
                 self.vue.root.after_cancel(self.nextloop)
