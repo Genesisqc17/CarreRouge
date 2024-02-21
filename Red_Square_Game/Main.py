@@ -14,14 +14,17 @@ class Controleur():
 
 
     def resetGame(self):
-
         self.vue.root.after_cancel(self.nextloop)
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
         self.modele.resetGame()
 
-
+    def backToMenu(self):
+        self.difficulteChoisie = False
+        self.animationStarted = False
+        self.nextloop = None
+        self.modele.resetGame()
     def entrer_nom(self,nom):
         self.modele.entrer_nom(nom)
 
@@ -31,6 +34,7 @@ class Controleur():
 
     def afficher_blocs(self):
        self.vue.afficher_blocs()
+
 
     def deplacer_rectangles(self):
         self.modele.deplacer_rectangles() # contient deplacer et collision mur de Rectangle
@@ -42,6 +46,7 @@ class Controleur():
 
             self.animer()
             self.modele.startTimer()
+            self.modele.augmenterVitesse()
 
     def animer(self):
         if self.animationStarted:

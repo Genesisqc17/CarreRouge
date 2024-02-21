@@ -25,7 +25,7 @@ class Vue():
 
     def quitter_jeu(self):
         self.afficher_menu()
-        self.parent.resetGame()
+        self.parent.backToMenu()
 
     def changer_frame(self, cle):
         if self.frame_active:
@@ -113,14 +113,14 @@ class Vue():
 
         self.score_string = "\n".join(self.score_array)
 
-        self.score_label = ttk.Label(self.score_frame, text=self.score_string)
-        self.score_label.pack(pady=10)
-
         self.effacer_button = ttk.Button(self.score_frame, text="Effacer Scores", command=self.effacer_score)
         self.effacer_button.pack()
 
         self.back_button2 = ttk.Button(self.score_frame, text="Back to Menu", command=self.afficher_menu)
         self.back_button2.pack()
+
+        self.score_label = ttk.Label(self.score_frame, text=self.score_string)
+        self.score_label.pack(pady=10)
 
         #self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
         sv_ttk.set_theme("dark")

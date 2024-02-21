@@ -22,7 +22,9 @@ class Modele():
         self.tempsDebut = None
         self.tempsFin = None
         self.score = None
-        self.nom = "";
+        self.nom = ""
+
+
 
     def entrer_nom(self, nom):
         self.nom = nom
@@ -69,10 +71,10 @@ class Modele():
             # print("if self.difficulte == 0")
 
         if (self.difficulte == 1):
-            self.nbRect = 6
+            self.nbRect = 5
 
         if (self.difficulte == 2):
-            self.nbRect = 8
+            self.nbRect = 6
         for i in range(self.nbRect):
             self.creer_rectangle_aleatoire()
 
@@ -109,15 +111,30 @@ class Modele():
 
             if not (x + width > buffer_x1 and x < buffer_x2 and y + height > buffer_y1 and y < buffer_y2):
                 break  # position valide trouvee
-        vitX = 2
-        vitY = 2
+        vitX = random.randrange(self.difficulte + 1, self.difficulte + 3)
+        vitY = random.randrange(self.difficulte + 1, self.difficulte + 3)
         r = random.choice([-1, 1])
         vitX *= r
         vitY *= r
 
+
         rect = Rectangle(self, x, y, vitX, vitY, width, height, "blue")
         self.blocs.append(rect)
 
+    def augmenterVitesse(self):
+        if self.difficulte == 0:
+            increment = 1.1
+        elif self.difficulte == 1:
+            increment = 1.15
+        else:
+            increment = 1.2
+        # parcourir les blocs
+        for i in self.blocs:
+            if isinstance(i, Rectangle):
+                i.vitesseX *= increment
+                i.vitesseY *= increment
+        self.parent.vue.root.after(4000, self.augmenterVitesse)
+        print("vitesse augmentee")
     def deplacer_rectangles(self):
         for i in self.blocs:
             if (isinstance(i, Rectangle)):
