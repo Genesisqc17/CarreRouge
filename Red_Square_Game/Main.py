@@ -18,12 +18,14 @@ class Controleur():
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
+        self.vue.root.after_cancel(self.modele.idAugmenterVitesse)
         self.modele.resetGame()
 
     def backToMenu(self):
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
+        self.vue.root.after_cancel(self.modele.idAugmenterVitesse)
         self.modele.resetGame()
     def entrer_nom(self,nom):
         self.modele.entrer_nom(nom)
@@ -43,7 +45,6 @@ class Controleur():
     def startGame(self):
         if not self.animationStarted:
             self.animationStarted = True
-
             self.animer()
             self.modele.startTimer()
             self.modele.augmenterVitesse()
@@ -57,7 +58,6 @@ class Controleur():
                 self.vue.changer_frame("menu")
                 self.resetGame()
                 self.vue.canevasGros.unbind("<B1-Motion>")
-
             else:
                 self.nextloop = self.vue.root.after(12, self.animer)
 
@@ -71,7 +71,7 @@ class Controleur():
 
     def fixer_difficulte(self, niveau):
         self.modele.fixer_difficulte(niveau)
-        # self.modele.creer_blocs()
+
 
     def show_score(self):
         self.modele.organiser_scores()

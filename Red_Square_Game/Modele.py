@@ -23,6 +23,7 @@ class Modele():
         self.tempsFin = None
         self.score = None
         self.nom = ""
+        self.idAugmenterVitesse = None
 
 
 
@@ -36,7 +37,6 @@ class Modele():
         self.tempsFin = time.time()
         tempscore = self.tempsFin - self.tempsDebut
         formatted_score = "{:.2f}".format(tempscore)
-        # self.score = float(formatted_score)
 
         if(self.difficulte == 0):
             dif = "Facile"
@@ -68,7 +68,6 @@ class Modele():
         self.creer_carre()
         if (self.difficulte == 0):
             self.nbRect = 4
-            # print("if self.difficulte == 0")
 
         if (self.difficulte == 1):
             self.nbRect = 5
@@ -95,7 +94,7 @@ class Modele():
         height = random.randint(min_height, max_height)
 
         # zone de buffer autour du carre rouge
-        square_buffer = 20
+        square_buffer = 100
         square = self.blocs[0]
 
         # definir la zone de buffer
@@ -133,7 +132,7 @@ class Modele():
             if isinstance(i, Rectangle):
                 i.vitesseX *= increment
                 i.vitesseY *= increment
-        self.parent.vue.root.after(4000, self.augmenterVitesse)
+        self.idAugmenterVitesse = self.parent.vue.root.after(4000, self.augmenterVitesse)
         print("vitesse augmentee")
     def deplacer_rectangles(self):
         for i in self.blocs:
