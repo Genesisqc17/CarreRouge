@@ -7,8 +7,6 @@ class Controleur():
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
         # self.creer_blocs()  # le dit au modele, qui instancie un carre, et les rectangles et la vue les affiche
-
-        self.partieRecommencee = False
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
@@ -25,15 +23,12 @@ class Controleur():
         print("dans resetGame du controlleur")
         self.vue.root.after_cancel(self.nextloop)
         self.modele.resetGame()
-        self.partieRecommencee = False
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
 
-
-
-
-
+    def entrer_nom(self,nom):
+        self.modele.entrer_nom(nom)
 
     def difficulte_choisie(self):
         print("dans difficulte choisie()")
@@ -45,7 +40,6 @@ class Controleur():
 
     def deplacer_rectangles(self):
         self.modele.deplacer_rectangles() # contient deplacer et collision mur de Rectangle
-
         self.vue.afficher_blocs()
 
     def startGame(self):
@@ -59,14 +53,10 @@ class Controleur():
         if self.animationStarted:
             self.modele.deplacer_rectangles() # faudra le mettre dans les limites du carre noir
             self.vue.afficher_blocs()
-            # fonction checkGameState()
-
             if not self.modele.enVie:
                 self.modele.gameStop()
-            # elif self.partieRecommencee:
-            #
-            #
-
+                self.vue.changer_frame("menu")
+                self.resetGame()
             else:
                 self.nextloop = self.vue.root.after(12, self.animer)
         else :
@@ -87,6 +77,9 @@ class Controleur():
 
     def effacer_score(self):
         self.modele.effacer_score()
+
+    def update_score(self):
+        self.vue.update_score()
 
 if (__name__ == "__main__"):
     c = Controleur()

@@ -23,7 +23,7 @@ class Vue():
 
         self.changer_frame("menu")
 
-    def deuxActions(self):
+    def quitter_jeu(self):
         self.afficher_menu()
         self.parent.resetGame()
 
@@ -43,6 +43,10 @@ class Vue():
         self.parent.difficulte_choisie()
         self.changer_frame("game")
 
+    def entrer_nom(self):
+        nom = self.entre.get()
+        self.parent.entrer_nom(nom)
+
 
     def creer_menu_frame(self):
         # Menu Frame
@@ -59,6 +63,15 @@ class Vue():
         self.canevasTitle = Canvas(self.menu_title_frame, width=50, height=50, bg="red", borderwidth=0)
         self.canevasTitle.create_rectangle(0, 0, 50, 50, fill="red", outline="")
         self.canevasTitle.pack(side=LEFT)
+
+        self.nom_frame = Frame(self.menu_frame)
+        self.nom_frame.pack()
+
+        self.entre = ttk.Entry(self.nom_frame)
+        self.entre.pack(side=LEFT)
+
+        self.entre_bouton = ttk.Button(self.nom_frame, text="Entrer nom", command=self.entrer_nom)
+        self.entre_bouton.pack(side=LEFT)
 
         self.difficulte_frame = Frame(self.menu_frame)
         self.difficulte_frame.pack(pady=20)
@@ -118,7 +131,7 @@ class Vue():
         self.game_frame = Frame(self.root)
 
         # Back to Menu Button
-        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=self.deuxActions)
+        self.back_button = ttk.Button(self.game_frame, text="Back to Menu", command=self.quitter_jeu)
         self.back_button.pack()
 
         self.canevasGros = Canvas(self.game_frame, width=self.modele.largeurGrand,
@@ -175,8 +188,10 @@ class Vue():
 
     def effacer_score(self):
         self.parent.effacer_score()
-        updated_score_array = self.parent.show_score()
+        self.update_score()
 
+    def update_score(self):
+        updated_score_array = self.parent.show_score()
         updated_score_string = "\n".join(updated_score_array)
         self.score_label.config(text=updated_score_string)
 
