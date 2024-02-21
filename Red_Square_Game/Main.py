@@ -6,32 +6,26 @@ class Controleur():
     def __init__(self):
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self, self.modele)
-        # self.creer_blocs()  # le dit au modele, qui instancie un carre, et les rectangles et la vue les affiche
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
-
-        # self.modele.creer_blocs()
-        # print("blocs crees dans le controleur")
-        # self.afficher_blocs()
-        # print("blocs afifches dans le controleur")
         self.vue.root.mainloop()
         self.modele.creer_doc_score_si_nexiste_pas()
 
 
     def resetGame(self):
-        print("dans resetGame du controlleur")
+
         self.vue.root.after_cancel(self.nextloop)
-        self.modele.resetGame()
         self.difficulteChoisie = False
         self.animationStarted = False
         self.nextloop = None
+        self.modele.resetGame()
+
 
     def entrer_nom(self,nom):
         self.modele.entrer_nom(nom)
 
     def difficulte_choisie(self):
-        print("dans difficulte choisie()")
         self.modele.creer_blocs()
         self.afficher_blocs()
 
@@ -57,8 +51,11 @@ class Controleur():
                 self.modele.gameStop()
                 self.vue.changer_frame("menu")
                 self.resetGame()
+                self.vue.canevasGros.unbind("<B1-Motion>")
+
             else:
                 self.nextloop = self.vue.root.after(12, self.animer)
+
         else :
             if self.nextloop:
                 self.vue.root.after_cancel(self.nextloop)

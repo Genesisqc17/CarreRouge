@@ -48,21 +48,21 @@ class Modele():
         data = [self.nom, formatted_score, dif, date]
         self.ecrire_csv(data)
         self.parent.update_score()
-        print("score sauvegarder")
+
 
     def resetGame(self):
-        print("dans resetGame du modele")
-        self.blocs.clear()
+
         self.squareHasBeenClicked = False
-        self.enVie = True
         self.nbRect = None
         self.difficulte = 0
         self.tempsDebut = None
         self.tempsFin = None
         self.score = None
+        self.blocs.clear()
+        self.enVie = True
 
     def creer_blocs(self):
-        print("dans creer-blocs")
+
         self.creer_carre()
         if (self.difficulte == 0):
             self.nbRect = 4
@@ -175,6 +175,7 @@ class Carre():
         self.posY = y
 
     def changer_position(self, new_pos):
+
         self.posX, self.posY = new_pos
 
         current_pos = self.parent.blocs[0].posX, self.parent.blocs[0].posY, self.parent.blocs[0].posX + self.taille, \
@@ -187,7 +188,7 @@ class Carre():
                 (current_pos[3] >= (
                         self.parent.hauteurGrand - self.parent.hauteurPetit) / 2 + self.parent.hauteurPetit)):
             self.parent.enVie = False
-            print("Collision mur blanc")
+
 
 class Rectangle():  # BROUILLON
     def __init__(self, parent, x, y, vitX, vitY, width, height, color="blue"):

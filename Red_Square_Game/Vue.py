@@ -42,6 +42,7 @@ class Vue():
     def afficher_game(self):
         self.parent.difficulte_choisie()
         self.changer_frame("game")
+        self.canevasGros.bind("<B1-Motion>", self.dragging)
 
     def entrer_nom(self):
         nom = self.entre.get()
@@ -169,22 +170,6 @@ class Vue():
 
         return self.game_frame
 
-    # def show_game_frame(self):
-    #     self.menu_frame.place_forget()
-    #     self.game_frame.pack()
-    #
-    # def show_score_frame(self):
-    #     self.menu_frame.place_forget()
-    #     self.parent.show_score()
-    #     self.score_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
-    #
-    # def back_to_menu(self):
-    #     self.game_frame.pack_forget()
-    #     self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
-    #
-    # def back_to_menu2(self):
-    #     self.score_frame.place_forget()
-    #     self.menu_frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
     def effacer_score(self):
         self.parent.effacer_score()
@@ -197,15 +182,15 @@ class Vue():
 
     def difficulte_facile(self):
         self.parent.fixer_difficulte(0)
-        print("difficulte fixee a facile dans la vue")
+
 
     def difficulte_moyen(self):
         self.parent.fixer_difficulte(1)
-        print("difficulte fixee a moyen dans la vue")
+
 
     def difficulte_difficile(self):
         self.parent.fixer_difficulte(2)
-        print("difficulte fixee a difficile dans la vue")
+
 
     def start_drag(self, event):
 
@@ -226,7 +211,7 @@ class Vue():
 
 
     def dragging(self, event):
-
+      
         items_with_tag = self.canevasGros.find_withtag("red-square")
 
         if items_with_tag:
